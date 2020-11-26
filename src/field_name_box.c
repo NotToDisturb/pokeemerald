@@ -8,6 +8,11 @@
 
 #define NAMEBOX_TAG 0x2722
 
+//  Usage:
+//  namebox <text>  ->  displays the namebox with the given text
+//  hidenamebox     ->  hides the namebox
+
+
 static EWRAM_DATA u8 sNameboxWindowId = 0;
 static EWRAM_DATA u8 sNameboxGfxId = 0;
 

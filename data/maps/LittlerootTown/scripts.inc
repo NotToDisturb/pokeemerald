@@ -160,10 +160,8 @@ LittlerootTown_EventScript_GoInsideWithMom:: @ 81E7F17
 	delay 10
 	applymovement LOCALID_MOM, LittlerootTown_Movement_MomApproachPlayerAtTruck
 	waitmovement 0
-    namebox LittlerootTown_Text_Mom
 	msgbox LittlerootTown_Text_OurNewHomeLetsGoInside, MSGBOX_DEFAULT
 	closemessage
-    hidenamebox
 	applymovement LOCALID_MOM, LittlerootTown_Movement_MomApproachDoor
 	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_Movement_PlayerApproachDoor
 	waitmovement 0
@@ -961,9 +959,6 @@ LittlerootTown_EventScript_GiveRunningShoes:: @ 81E8693
 	closemessage
 	delay 30
 	return
-
-LittlerootTown_Text_Mom:
-	.string "MOM$"
 
 LittlerootTown_Text_OurNewHomeLetsGoInside: @ 81E86BC
 	.string "MOM: {PLAYER}, we're here, honey!\p"
