@@ -693,7 +693,7 @@ SECTIONS {
         data/mystery_event.o(.rodata);
         src/m4a_tables.o(.rodata);
         data/sound_data.o(.rodata);
-        src/field_name_box.o(.rodata)
+        src/field_name_box.o(.rodata);
     } =0
 
     song_data :
