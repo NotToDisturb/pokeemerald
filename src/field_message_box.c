@@ -7,6 +7,8 @@
 #include "match_call.h"
 #include "field_message_box.h"
 
+#include "field_name_box.h"
+
 static EWRAM_DATA u8 sFieldMessageBoxMode = 0;
 
 static void ExpandStringAndStartDrawFieldMessage(const u8*, bool32);
@@ -135,6 +137,9 @@ void HideFieldMessageBox(void)
     DestroyTask_DrawFieldMessage();
     ClearDialogWindowAndFrame(0, 1);
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
+    
+    if(IsNameboxDisplayed())
+        ClearNamebox();
 }
 
 u8 GetFieldMessageBoxMode(void)
