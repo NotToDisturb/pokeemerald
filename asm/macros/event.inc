@@ -1621,6 +1621,11 @@
 	.byte 0xe3
     .4byte \name
 	.endm
+    
+    @ Closes the current message box.
+	.macro hidenamebox
+	.byte 0xe4
+	.endm
 
 
 @ Supplementary

@@ -2313,3 +2313,9 @@ bool8 ScrCmd_namebox(struct ScriptContext *ctx) {
     ShowFieldName(name);
     return FALSE;
 }
+
+bool8 ScrCmd_hidenamebox(struct ScriptContext *ctx) {
+    if(IsNameboxDisplayed())
+        ClearNamebox();
+    return FALSE;
+}

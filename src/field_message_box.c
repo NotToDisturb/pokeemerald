@@ -137,9 +137,6 @@ void HideFieldMessageBox(void)
     DestroyTask_DrawFieldMessage();
     ClearDialogWindowAndFrame(0, 1);
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
-    
-    if(IsNameboxDisplayed())
-        ClearNamebox();
 }
 
 u8 GetFieldMessageBoxMode(void)

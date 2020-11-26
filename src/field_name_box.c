@@ -62,41 +62,41 @@ static const struct SpritePalette sSpritePalette_Namebox = {
 static const struct WindowTemplate sNamebox_WindowTemplate =
 {
     .bg = 0,
-    .tilemapLeft = 1,
+    .tilemapLeft = 1, 
     .tilemapTop = 12,
-    .width = 6,
-    .height = 2,
+    .width = 6, 
+    .height = 2,                //required to be at least two
     .paletteNum = 15,
-    .baseBlock = 0x188
+    .baseBlock = 0x188          //placed before the msgbox tiles
 };
 
 
-void LoadNameboxWindow(const struct WindowTemplate *window) {
+static void LoadNameboxWindow(const struct WindowTemplate *window) {
     sNameboxWindowId = AddWindow(window);
     
     PutWindowTilemap(sNameboxWindowId);
     CopyWindowToVram(sNameboxWindowId, 3);
 }
 
-void LoadNameboxSprite() {
+static void LoadNameboxSprite(s8 x, s8 y) {
     u8 spriteId;
     
     LoadCompressedSpriteSheet(&sSpriteSheet_Namebox);
     LoadSpritePalette(&sSpritePalette_Namebox);
-    spriteId = CreateSprite(&sSpriteTemplate_Namebox, 32, 104, 0);
+    spriteId = CreateSprite(&sSpriteTemplate_Namebox, x, y, 0);
     if (sNameboxGfxId == MAX_SPRITES)
         return;
     else
         sNameboxGfxId = spriteId;
 }
 
-void AddTextPrinterForName() {
+static void AddTextPrinterForName() {
     struct TextPrinterTemplate printer;
     
     printer.currentChar = gStringVar3;
     printer.windowId = sNameboxWindowId;
     printer.fontId = 1;
-    printer.x = 5;
+    printer.x = 5; 
     printer.y = 0;
     printer.currentX = printer.x;
     printer.currentY = printer.y;
@@ -116,15 +116,24 @@ bool8 IsNameboxDisplayed() {
     return TRUE;
 }
 
+static void ClearNameboxTiles(){
+    ClearWindowTilemap(sNameboxWindowId);
+    FillWindowPixelBuffer(sNameboxWindowId, PIXEL_FILL(0));
+    CopyWindowToVram(sNameboxWindowId, 3);
+}
+
 void ClearNamebox() {
+    ClearNameboxTiles();
     RemoveWindow(sNameboxWindowId);
     sNameboxWindowId = 0;
     DestroySpriteAndFreeResources(&gSprites[sNameboxGfxId]);
 }
 
 void ShowFieldName(const u8 *str) {
-    LoadNameboxWindow(&sNamebox_WindowTemplate);
-    LoadNameboxSprite();
+    if(!IsNameboxDisplayed()){
+        LoadNameboxWindow(&sNamebox_WindowTemplate);
+        LoadNameboxSprite(32, 104);
+    }
     
     StringExpandPlaceholders(gStringVar3, str);
     AddTextPrinterForName();
