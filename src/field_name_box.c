@@ -135,10 +135,11 @@ void ClearNamebox() {
 }
 
 void ShowFieldName(const u8 *str) {
-    if(!IsNameboxDisplayed()){
-        LoadNameboxWindow(&sNamebox_WindowTemplate);
-        LoadNameboxSprite(32, 104);
-    }
+    if(IsNameboxDisplayed())
+        ClearNamebox();
+    
+    LoadNameboxWindow(&sNamebox_WindowTemplate);
+    LoadNameboxSprite(32, 104);
     
     StringExpandPlaceholders(gStringVar3, str);
     AddTextPrinterForName();
