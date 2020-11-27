@@ -13,6 +13,9 @@ extern const u8 gTextWindowFrame1_Gfx[];
 extern const u16 gTextWindowFrame1_Pal[];
 
 const struct TilesPal *GetWindowFrameTilesPal(u8 id);
+
+void SetMessageWindowFrameId(u8 id);
+
 void LoadMessageBoxGfx(u8 windowId, u16 destOffset, u8 palOffset);
 void LoadUserWindowBorderGfx(u8 windowId, u16 destOffset, u8 palOffset);
 void LoadWindowGfx(u8 windowId, u8 frameId, u16 destOffset, u8 palOffset);

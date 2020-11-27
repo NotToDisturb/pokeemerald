@@ -1613,6 +1613,12 @@
 	.2byte \item
 	.2byte \quantity
 	.endm
+    
+	@ Spawns a secondary box showing how many Coins the player has.
+	.macro setmessagewindow id:req
+	.byte 0xe3
+	.byte \id
+	.endm
 
 
 @ Supplementary
@@ -1739,12 +1745,15 @@
 	MSGBOX_YESNO = 5
 	MSGBOX_AUTOCLOSE = 6
 	MSGBOX_GETPOINTS = 9
+    
+	MSGBOX_WINDOW_DEFAULT = 1
 
 	YES = 1
 	NO  = 0
 
-	.macro msgbox text:req, type=MSGBOX_DEFAULT
+	.macro msgbox text:req, type=MSGBOX_DEFAULT, id=MSGBOX_WINDOW_DEFAULT
 	loadword 0, \text
+	loadword 1, \id
 	callstd \type
 	.endm
 

@@ -91,10 +91,37 @@ const struct TilesPal *GetWindowFrameTilesPal(u8 id)
         return &sWindowFrames[id];
 }
 
+
+#define MESSAGE_WINDOW_FRAMES_COUNT 1
+
+static EWRAM_DATA u8 sMessageWindowFrameId = 0;
+
+void SetMessageWindowFrameId(u8 id) {
+    sMessageWindowFrameId = id;
+}
+
+static const u8 gMessageBox_Default_Gfx[] = INCBIN_U8("graphics/text_window/message_box.4bpp");
+
+static const u16 gMessageBox_Default_Pal[] = INCBIN_U16("graphics/text_window/message_box.4bpp");
+
+static const struct TilesPal sMessageWindowFrames[MESSAGE_WINDOW_FRAMES_COUNT] = {
+    {gMessageBox_Default_Gfx, gMessageBox_Default_Pal},
+};
+
+static const struct TilesPal *GetMessageWindowFrameTilesPal() {
+    if (sMessageWindowFrameId >= MESSAGE_WINDOW_FRAMES_COUNT)
+        return &sMessageWindowFrames[0];
+    else
+        return &sMessageWindowFrames[sMessageWindowFrameId];
+}
+
+
+
 void LoadMessageBoxGfx(u8 windowId, u16 destOffset, u8 palOffset)
 {
-    LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), gMessageBox_Gfx, 0x1C0, destOffset);
+    LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), GetMessageWindowFrameTilesPal()->tiles, 0x1C0, destOffset);
     LoadPalette(GetOverworldTextboxPalettePtr(), palOffset, 0x20);
+    sMessageWindowFrameId = 0;
 }
 
 void LoadUserWindowBorderGfx_(u8 windowId, u16 destOffset, u8 palOffset)
@@ -187,7 +214,8 @@ const u16 *GetTextWindowPalette(u8 id)
 
 const u16 *GetOverworldTextboxPalettePtr(void)
 {
-    return gMessageBox_Pal;
+    //return gMessageBox_Pal;
+    return GetMessageWindowFrameTilesPal()->pal;
 }
 
 void sub_8098C6C(u8 bg, u16 destOffset, u8 palOffset)
