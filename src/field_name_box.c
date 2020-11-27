@@ -14,6 +14,7 @@
 //  hidenamebox     ->  hides the namebox
 
 static void LoadNameboxWindow(const struct WindowTemplate *window);
+static void LoadNameboxTilemap();
 static void CreateTask_DisplayNamebox();
 static void Task_DisplayNamebox(u8 taskId);
 static void LoadNameboxSprite(s8 x, s8 y);
@@ -84,7 +85,12 @@ static const struct WindowTemplate sNamebox_WindowTemplate =
 
 
 void ShowFieldName(const u8 *str) {
+    if(IsNameboxDisplayed())
+            ClearNamebox();
+            
+    LoadNameboxWindow(&sNamebox_WindowTemplate);
     StringExpandPlaceholders(gStringVar3, str);
+    AddTextPrinterForName();
     CreateTask_DisplayNamebox();
 }
 
@@ -112,16 +118,12 @@ static void CreateTask_DisplayNamebox() {
 static void Task_DisplayNamebox(u8 taskId) {
     struct Task *task = &gTasks[taskId];
     
-    if (gTasks[taskId].tTimer)
+    if (gTasks[taskId].tTimer) 
         gTasks[taskId].tTimer--;
     else{
-        if(IsNameboxDisplayed())
-            ClearNamebox();
-    
-        LoadNameboxWindow(&sNamebox_WindowTemplate);
+        LoadNameboxTilemap();
         LoadNameboxSprite(32, 104);
-    
-        AddTextPrinterForName();
+        
         DestroyTask(taskId);
     }
 }
@@ -132,8 +134,11 @@ static void Task_DisplayNamebox(u8 taskId) {
 static void LoadNameboxWindow(const struct WindowTemplate *window) {
     sNameboxWindowId = AddWindow(window);
     
-    PutWindowTilemap(sNameboxWindowId);
     CopyWindowToVram(sNameboxWindowId, 3);
+}
+
+static void LoadNameboxTilemap() {
+    PutWindowTilemap(sNameboxWindowId);
 }
 
 static void LoadNameboxSprite(s8 x, s8 y) {
