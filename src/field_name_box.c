@@ -3,6 +3,7 @@
 #include "string_util.h"
 #include "window.h"
 #include "decompress.h"
+#include "task.h"
 #include "text.h"
 #include "field_name_box.h"
 
@@ -12,6 +13,12 @@
 //  namebox <text>  ->  displays the namebox with the given text
 //  hidenamebox     ->  hides the namebox
 
+static void LoadNameboxWindow(const struct WindowTemplate *window);
+static void CreateTask_DisplayNamebox();
+static void Task_DisplayNamebox(u8 taskId);
+static void LoadNameboxSprite(s8 x, s8 y);
+static void AddTextPrinterForName();
+static void ClearNameboxTiles();
 
 static EWRAM_DATA u8 sNameboxWindowId = 0;
 static EWRAM_DATA u8 sNameboxGfxId = 0;
@@ -76,6 +83,52 @@ static const struct WindowTemplate sNamebox_WindowTemplate =
 };
 
 
+void ShowFieldName(const u8 *str) {
+    StringExpandPlaceholders(gStringVar3, str);
+    CreateTask_DisplayNamebox();
+}
+
+bool8 IsNameboxDisplayed() {
+    if(sNameboxWindowId == 0)
+        return FALSE;
+    return TRUE;
+}
+
+void ClearNamebox() {
+    ClearNameboxTiles();
+    RemoveWindow(sNameboxWindowId);
+    sNameboxWindowId = 0;
+    DestroySpriteAndFreeResources(&gSprites[sNameboxGfxId]);
+}
+
+
+#define tTimer data[0]
+
+static void CreateTask_DisplayNamebox() {
+    u8 taskId = CreateTask(Task_DisplayNamebox, 0x50);
+    gTasks[taskId].tTimer = 0x1;
+}
+
+static void Task_DisplayNamebox(u8 taskId) {
+    struct Task *task = &gTasks[taskId];
+    
+    if (gTasks[taskId].tTimer)
+        gTasks[taskId].tTimer--;
+    else{
+        if(IsNameboxDisplayed())
+            ClearNamebox();
+    
+        LoadNameboxWindow(&sNamebox_WindowTemplate);
+        LoadNameboxSprite(32, 104);
+    
+        AddTextPrinterForName();
+        DestroyTask(taskId);
+    }
+}
+
+#undef tTimer
+
+
 static void LoadNameboxWindow(const struct WindowTemplate *window) {
     sNameboxWindowId = AddWindow(window);
     
@@ -115,32 +168,14 @@ static void AddTextPrinterForName() {
     AddTextPrinter(&printer, 0xFF, NULL);
 }
 
-bool8 IsNameboxDisplayed() {
-    if(sNameboxWindowId == 0)
-        return FALSE;
-    return TRUE;
-}
-
 static void ClearNameboxTiles(){
     ClearWindowTilemap(sNameboxWindowId);
     FillWindowPixelBuffer(sNameboxWindowId, PIXEL_FILL(0));
     CopyWindowToVram(sNameboxWindowId, 3);
 }
 
-void ClearNamebox() {
-    ClearNameboxTiles();
-    RemoveWindow(sNameboxWindowId);
-    sNameboxWindowId = 0;
-    DestroySpriteAndFreeResources(&gSprites[sNameboxGfxId]);
-}
 
-void ShowFieldName(const u8 *str) {
-    if(IsNameboxDisplayed())
-        ClearNamebox();
-    
-    LoadNameboxWindow(&sNamebox_WindowTemplate);
-    LoadNameboxSprite(32, 104);
-    
-    StringExpandPlaceholders(gStringVar3, str);
-    AddTextPrinterForName();
-}
+
+
+
+
