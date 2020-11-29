@@ -7767,14 +7767,14 @@ static bool8 IsShadowAllowedInMetatile(struct ObjectEvent *objEvent) {
 }
 
 static void GetGroundEffectFlags_Shadow(struct ObjectEvent *objEvent, u32 *flags) {
-    if(objEvent->hasShadow)
-        return;
-
     if(objEvent->invisible || !objEvent->active 
         || !IsShadowAllowedInId(objEvent) || !IsShadowAllowedInWeather() || !IsShadowAllowedInMetatile(objEvent)){
         objEvent->hasShadow = FALSE;
         return;
     }
+    
+    if(objEvent->hasShadow)
+        return;
 
     *flags |= GROUND_EFFECT_SHADOW;
 }
