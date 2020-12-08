@@ -50,6 +50,8 @@
 #include "window.h"
 #include "constants/event_objects.h"
 
+#include "text_screen.h"
+
 typedef u16 (*SpecialFunc)(void);
 typedef void (*NativeFunc)(void);
 
@@ -2301,4 +2303,10 @@ bool8 ScrCmd_warpsootopolislegend(struct ScriptContext *ctx)
     DoSootopolisLegendWarp();
     ResetInitialPlayerAvatarState();
     return TRUE;
+}
+
+bool8 ScrCmd_textscreen(struct ScriptContext *ctx)
+{
+    InitTextScreen(ctx);
+    return FALSE;
 }

@@ -1613,6 +1613,19 @@
 	.2byte \item
 	.2byte \quantity
 	.endm
+    
+    .macro textscreen textId:req, x:req, y:req, width:req, height:req, speed:req, bgColor:req, fontId:req, fontColor:req
+    .byte 0xe3
+    .byte \textId
+    .byte \x
+    .byte \y
+    .byte \width
+    .byte \height
+    .byte \speed
+    .byte \bgColor
+    .byte \fontId
+    .byte \fontColor
+    .endm
 
 
 @ Supplementary
